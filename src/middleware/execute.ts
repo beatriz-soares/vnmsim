@@ -18,6 +18,7 @@ const commands = {
   SUB: '-',
   MUL: '*',
   DIV: '/',
+  CMP: '-',
 }
 
 export const execute = (dispatch, getState) => {
@@ -62,14 +63,14 @@ export const execute = (dispatch, getState) => {
     case Steps.IR_CMD: {
       if (sim.interval) dispatch(setFocusCell(pc.val))
       if (sim.interval) dispatch(setFocusEl('ir.input'))
-      dispatch(setIrCmd(line.substr(0, 3).toUpperCase()))
+      dispatch(setIrCmd((line.trim().split(/\s+/)[0] || '').toUpperCase()))
       dispatch(setIrLoc(""))
       break
     }
     case Steps.IR_LOC: {
       if (sim.interval) dispatch(setFocusCell(pc.val))
       if (sim.interval) dispatch(setFocusEl('ir.input'))
-      dispatch(setIrLoc(line.substr(4).toUpperCase().trim()))
+      dispatch(setIrLoc((line.trim().split(/\s+/)[1] || '').toUpperCase()))
       break
     }
     case Steps.PC_STEP: {
@@ -108,7 +109,10 @@ export const execute = (dispatch, getState) => {
           dispatch(incrementPerformedJmp())
           break
         }
-        case 'JMZ': {
+        case 'JMZ':
+        case 'JMPZ':
+        case 'JMPP':
+        case 'JMPN': {
           if (sim.interval) dispatch(setFocusEl('acc.field'))
           break
         }
@@ -121,9 +125,14 @@ export const execute = (dispatch, getState) => {
       break
     }
     case Steps.ALU_OPERAND: {
-      // JMZ instruction behaviour
-      if (ir.cmd == 'JMZ') {
-        if (alu.acc == 0) {
+      // Conditional jumps behavior
+      if (['JMZ', 'JMPZ', 'JMPP', 'JMPN'].includes(ir.cmd)) {
+        const shouldJump = (
+          (ir.cmd == 'JMZ' || ir.cmd == 'JMPZ') ? alu.acc == 0 :
+          (ir.cmd == 'JMPP') ? alu.acc > 0 :
+          alu.acc < 0
+        )
+        if (shouldJump) {
           if (sim.interval) dispatch(setFocusEl('pc.input'))
           dispatch(setPc(+ir.loc))
           dispatch(setCodeLine(+ir.loc - 1))

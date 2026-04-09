@@ -1,12 +1,9 @@
 import { ReactCodeMirrorRef } from '@uiw/react-codemirror'
 
 export const editorOptions = {
-    mode: "vnm",
     highlightActiveLine: true,
     highlightActiveLineGutter: true,
     highlightSelectionMatches: true,
-    firstLineNumber: 0,
-    cursorBlinkRate: 800,
     lineNumbers: false
 }
 

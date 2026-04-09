@@ -33,8 +33,9 @@ pub fn execute_line(input:SimulatorState) -> SimulatorState {
     }
     
     // get instruction and location from code line
-    let cmd = line[0..3].to_uppercase();
-    let loc = line.get(4..).map_or_else(|| "", str::trim).to_uppercase().to_string();
+    let mut parts = line.split_whitespace();
+    let cmd = parts.next().unwrap_or("NOP").to_uppercase();
+    let loc = parts.next().unwrap_or("").trim().to_uppercase().to_string();
     
     // increment pc
     params.pc.val += params.pc.step;
@@ -59,6 +60,39 @@ pub fn execute_line(input:SimulatorState) -> SimulatorState {
         "JMZ" => {
             params.stats.performed_jmz += 1;
             if params.alu.acc == 0 {
+                params.pc.val = loc.parse::<i32>().unwrap();
+                params.sim.codeLine = params.pc.val;
+            }
+            else {
+                params.sim.codeLine += 1;
+            }
+            return params
+        },
+        "JMPZ" => {
+            params.stats.performed_jmz += 1;
+            if params.alu.acc == 0 {
+                params.pc.val = loc.parse::<i32>().unwrap();
+                params.sim.codeLine = params.pc.val;
+            }
+            else {
+                params.sim.codeLine += 1;
+            }
+            return params
+        },
+        "JMPP" => {
+            params.stats.performed_jmz += 1;
+            if params.alu.acc > 0 {
+                params.pc.val = loc.parse::<i32>().unwrap();
+                params.sim.codeLine = params.pc.val;
+            }
+            else {
+                params.sim.codeLine += 1;
+            }
+            return params
+        },
+        "JMPN" => {
+            params.stats.performed_jmz += 1;
+            if params.alu.acc < 0 {
                 params.pc.val = loc.parse::<i32>().unwrap();
                 params.sim.codeLine = params.pc.val;
             }
@@ -96,6 +130,9 @@ pub fn execute_line(input:SimulatorState) -> SimulatorState {
         "DIV" => {
             params.alu.op = "/".to_string()
         },
+        "CMP" => {
+            params.alu.op = "-".to_string()
+        },
         _ => {}
     }
 
@@ -130,6 +167,11 @@ pub fn execute_line(input:SimulatorState) -> SimulatorState {
         "DIV" => {
             params.alu.e1 = params.alu.acc;
             params.alu.acc = params.alu.e1 / params.alu.e2;
+            params.stats.alu_calculation += 1;
+        },
+        "CMP" => {
+            params.alu.e1 = params.alu.acc;
+            params.alu.acc = params.alu.e1 - params.alu.e2;
             params.stats.alu_calculation += 1;
         },
         _ => {

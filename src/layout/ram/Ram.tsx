@@ -24,7 +24,7 @@ import { setCode } from 'src/store/ram.slice'
 import { setError, clearError } from 'src/store/errors.slice'
 import { useAppDispatch, useAppSelector } from 'src/hooks/store'
 
-import { editorOptions, updateCode } from 'src/utility/editor'
+import { updateCode } from 'src/utility/editor'
 import { getNormalizedThemeName } from 'src/themes/utils'
 
 const editorTheme = new Compartment()
@@ -125,7 +125,7 @@ const Ram = forwardRef((_props, ref) => {
                 height={ height.toString() }
                 extensions={ editorExtensions }
                 onChange={ onEditorChange }
-                basicSetup={ editorOptions }
+                basicSetup={ false }
               />
             </Styled.RamHalf>
             <Variables focusedVar={ sim.focus.var } />

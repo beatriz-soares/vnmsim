@@ -1,7 +1,7 @@
 export const editorMode = {
   token: (stream) => {
     if (
-      stream.match(/^(lod|add|sub|mul|div|sto|jmp|jmz|nop|hlt)/i)
+      stream.match(/^(lod|add|sub|mul|div|sto|cmp|jmp|jmz|jmpz|jmpp|jmpn|nop|hlt)/i)
     ) {
       return "keyword"
     }

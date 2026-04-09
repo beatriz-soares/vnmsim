@@ -16,7 +16,8 @@ const withSyntaxErrors = [
   "LODs 3", "sLOD 3", "sLOD", "hlt 2", "nop 2", "nop x",
   "hlt x", "lod", "add", "mul", "div ", "sub", "lod v1",
   "lod t-1", "add t1s", "lod //x", "jmp", "jmz", "jmp x",
-  "jmz x", "nop hlt", "lod #x", "lod#2", "x", "lod 4",
+  "jmz x", "jmpz", "jmpp x", "jmpn x", "cmp", "cmp q",
+  "nop hlt", "lod #x", "lod#2", "x", "lod 4", "cmp 4",
   "lod 3", "jmp 4"
 ]
 
@@ -30,7 +31,8 @@ test("syntax errors", () => {
 const withSyntaxCorrect = [
   "LOD 2", "LOD #1", "LOD X", "ADD #1", "ADD Y", "ADD 1",
   "MUL #1", "MUL 1", "MUL Z", "DIV #2", "DIV 3", "DIV T1",
-  "JMP 1", "JMZ 2", "NOP", "HLT"
+  "CMP #2", "CMP X", "CMP 1", "JMP 1", "JMZ 2", "JMPZ 2",
+  "JMPP 2", "JMPN 2", "NOP", "HLT"
 ]
 
 // check instructions that should NOT trigger an error

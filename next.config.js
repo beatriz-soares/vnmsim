@@ -1,4 +1,5 @@
 const isProd = process.env.NODE_ENV === "production";
+const path = require("path");
 
 const withPWA = require("next-pwa")({
   dest: "public",
@@ -23,13 +24,21 @@ module.exports = async () => {
       TxNativePublicToken: process.env.TX_NATIVE_PUBLIC_TOKEN,
     },
     webpack: function (config, _options) {
-      return {
-        ...config,
-        experiments: {
-          layers: true,
-          asyncWebAssembly: true,
-        },
+      // Force a single CodeMirror instance to avoid extension instanceof mismatches.
+      config.resolve = config.resolve || {};
+      config.resolve.alias = {
+        ...(config.resolve.alias || {}),
+        "@codemirror/state": path.resolve(__dirname, "node_modules/@codemirror/state"),
+        "@codemirror/view": path.resolve(__dirname, "node_modules/@codemirror/view"),
       };
+
+      config.experiments = {
+        ...(config.experiments || {}),
+        layers: true,
+        asyncWebAssembly: true,
+      };
+
+      return config;
     },
     experimental: {
       swcPlugins: [
