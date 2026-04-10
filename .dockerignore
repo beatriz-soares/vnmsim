@@ -1,0 +1,32 @@
+# Compiled source #
+###################
+build/
+dist/
+coverage/
+node_modules/
+out/
+public/sw*
+public/workbox-*
+yarn.lock
+yarn-error.log
+package-lock.json
+pnpm-lock.yaml
+.yarnrc
+.next
+todo.todo
+next-env.d.ts
+.eslintrc.json
+embedded.provisionprofile
+distribute.sh
+*.pkg
+
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+.dbignore
+ehthumbs.db
+Thumbs.db
